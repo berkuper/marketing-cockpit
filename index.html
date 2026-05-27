@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Hotéis · Dashboard Comercial 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #F6F2EA;
+  --bg-card: #FFFFFF;
+  --bg-soft: #FAF7F2;
+  --ink: #0B1929;
+  --ink-soft: #4A5567;
+  --ink-mute: #8B95A3;
+  --line: #E5DDD0;
+  --line-soft: #EFE9DE;
+  --gold: #A47551;
+  --gold-dark: #7D5A3E;
+  --gold-soft: #D4B896;
+  --green: #2D7D5B;
+  --red: #8B2C2C;
+  --blue: #2D5B7D;
+  --shadow: 0 1px 2px rgba(11,25,41,.04), 0 4px 16px rgba(11,25,41,.04);
+  --shadow-hover: 0 2px 4px rgba(11,25,41,.06), 0 8px 24px rgba(11,25,41,.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.serif { font-family: 'Fraunces', serif; font-feature-settings: "ss01" on; }
+
+/* ==== TOP BAR ==== */
+.topbar {
+  background: var(--ink);
+  color: #F6F2EA;
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--gold);
+}
+.brand { display: flex; align-items: baseline; gap: 14px; }
+.brand-mark {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.brand-mark .accent { color: var(--gold); font-style: italic; }
+.brand-sub {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #B8A98F;
+  font-weight: 500;
+}
+.topbar-right { display: flex; align-items: center; gap: 24px; font-size: 12px; }
+.updated { color: #B8A98F; display: flex; align-items: center; gap: 8px; }
+.updated::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 0 3px rgba(164,117,81,.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: .5; } }
+.user-pill {
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 100px;
+  font-size: 12px;
+  color: #F6F2EA;
+}
+
+/* ==== TABS ==== */
+.tabs {
+  background: var(--bg-card);
+  padding: 0 40px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 4px;
+}
+.tab {
+  padding: 18px 28px;
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--ink-mute);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+  font-weight: 500;
+}
+.tab .badge {
+  font-family: 'Manrope', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  background: var(--line-soft);
+  color: var(--ink-mute);
+  border-radius: 100px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* ==== FILTERS ==== */
+.filters {
+  background: var(--bg-soft);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.filter-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+}
+.filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 7px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: all .15s;
+  font-weight: 500;
+  user-select: none;
+}
+.chip:hover { border-color: var(--gold); color: var(--ink); }
+.chip.active {
+  background: var(--ink);
+  color: #F6F2EA;
+  border-color: var(--ink);
+}
+
+/* ==== MAIN ==== */
+.main {
+  padding: 32px 40px 60px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.page-head {
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.page-title em { color: var(--gold); font-style: italic; font-weight: 500; }
+.page-meta {
+  font-size: 12px;
+  color: var(--ink-mute);
+  text-align: right;
+}
+.page-meta strong { color: var(--ink); font-weight: 600; }
+
+/* ==== KPI CARDS ==== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 22px 22px 20px;
+  box-shadow: var(--shadow);
+  border-top: 3px solid var(--gold);
+  transition: transform .15s, box-shadow .15s;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.kpi-card.alert { border-top-color: var(--red); }
+.kpi-card.good { border-top-color: var(--green); }
+.kpi-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.kpi-value {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.kpi-value .unit {
+  font-size: 14px;
+  color: var(--ink-mute);
+  font-weight: 400;
+  margin-left: 3px;
+}
+.kpi-foot {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+}
+.kpi-foot strong { color: var(--ink); font-weight: 600; }
+
+/* ==== SECTIONS ==== */
+.section {
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 24px 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+.section-sub {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.row-asym { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 16px; }
+.chart-wrap { position: relative; height: 280px; }
+.chart-wrap.tall { height: 360px; }
+
+/* ==== TABLES ==== */
+.tbl {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+.tbl th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.tbl th.num { text-align: right; }
+.tbl td {
+  padding: 14px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+}
+.tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--bg-soft); }
+.tbl .rank {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 500;
+  width: 32px;
+}
+.tbl .strong { font-weight: 600; color: var(--ink); }
+.tbl .muted { color: var(--ink-mute); font-size: 11px; }
+
+/* Bar visualization in cells */
+.cell-bar {
+  position: relative;
+  height: 6px;
+  background: var(--line-soft);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.cell-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  width: var(--w, 0%);
+  border-radius: 3px;
+}
+
+/* Tag/Pill */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tag.ota { background: rgba(45,91,125,.1); color: var(--blue); }
+.tag.direto { background: rgba(45,125,91,.1); color: var(--green); }
+.tag.corp { background: rgba(164,117,81,.12); color: var(--gold-dark); }
+.tag.opr { background: rgba(139,149,163,.15); color: var(--ink-soft); }
+
+/* ==== HOTEL CARDS ==== */
+.hotel-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.hotel-card {
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 18px 18px 16px;
+  box-shadow: var(--shadow);
+  border-left: 3px solid var(--gold);
+  cursor: pointer;
+  transition: all .15s;
+}
+.hotel-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.hotel-card.selected { border-left-color: var(--ink); background: var(--bg-soft); }
+.hotel-name {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  min-height: 34px;
+}
+.hotel-rev {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+.hotel-meta {
+  font-size: 10px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hotel-meta span { white-space: nowrap; }
+.hotel-meta strong { color: var(--ink); font-weight: 600; }
+
+/* ==== ALERT BANNERS ==== */
+.alert-box {
+  background: rgba(139,44,44,.05);
+  border-left: 3px solid var(--red);
+  padding: 16px 20px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.alert-box .icon {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--red);
+  line-height: 1;
+}
+.alert-box strong { color: var(--ink); font-weight: 600; }
+
+.foot-note {
+  margin-top: 28px;
+  padding: 16px 20px;
+  background: rgba(164,117,81,.06);
+  border-left: 3px solid var(--gold);
+  font-size: 12px;
+  color: var(--ink-soft);
+  border-radius: 0 4px 4px 0;
+}
+.foot-note strong { color: var(--ink); font-weight: 600; }
+
+/* ==== MARKETING PLACEHOLDER ==== */
+.marketing-placeholder {
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 60px 48px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  border: 1px dashed var(--line);
+}
+.placeholder-icon {
+  font-family: 'Fraunces', serif;
+  font-size: 64px;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-weight: 300;
+}
+.placeholder-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.placeholder-text {
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto 32px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.upcoming-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+.upcoming-card {
+  padding: 20px;
+  background: var(--bg-soft);
+  border-radius: 4px;
+  border-left: 3px solid var(--gold);
+}
+.upcoming-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.upcoming-card ul {
+  list-style: none;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.upcoming-card li::before {
+  content: '·';
+  color: var(--gold);
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+/* ==== ANIMATIONS ==== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.kpi-card, .section, .hotel-card, .marketing-placeholder {
+  animation: fadeUp 0.4s ease-out backwards;
+}
+.kpi-card:nth-child(1) { animation-delay: 0.05s; }
+.kpi-card:nth-child(2) { animation-delay: 0.1s; }
+.kpi-card:nth-child(3) { animation-delay: 0.15s; }
+.kpi-card:nth-child(4) { animation-delay: 0.2s; }
+.kpi-card:nth-child(5) { animation-delay: 0.25s; }
+
+.hidden { display: none !important; }
+
+@media (max-width: 1200px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .hotel-cards { grid-template-columns: repeat(3, 1fr); }
+  .row-2, .row-asym { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .main { padding: 20px 16px 40px; }
+  .topbar, .tabs, .filters { padding-left: 16px; padding-right: 16px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .hotel-cards { grid-template-columns: 1fr; }
+  .upcoming-grid { grid-template-columns: 1fr; }
+  .page-title { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">Royal<span class="accent"> Hotéis</span></div>
+    <div class="brand-sub">Painel Executivo</div>
+  </div>
+  <div class="topbar-right">
+    <div class="updated">Dados YTD · ano fiscal 2025</div>
+    <div class="user-pill">Bernard Kuperman · CEO</div>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs">
+  <div class="tab active" data-tab="comercial">Comercial</div>
+  <div class="tab" data-tab="marketing">Marketing<span class="badge">Em breve</span></div>
+</nav>
+
+<!-- FILTERS -->
+<div class="filters">
+  <span class="filter-label">Unidade</span>
+  <div class="filter-group" id="hotelFilter">
+    <div class="chip active" data-hotel="all">Todas (5)</div>
+    <div class="chip" data-hotel="ROYAL COLLECTION PAULISTA">Collection Paulista</div>
+    <div class="chip" data-hotel="ROYAL CENTER HOTEL">Center Hotel</div>
+    <div class="chip" data-hotel="ROYAL COLLECTION SAVASSI">Collection Savassi</div>
+    <div class="chip" data-hotel="ROYAL GOLDEN">Golden</div>
+    <div class="chip" data-hotel="ROYAL DESIGN">Design</div>
+  </div>
+  <span class="filter-label" style="margin-left:16px">Período</span>
+  <div class="filter-group">
+    <div class="chip active">Ano 2025</div>
+    <div class="chip" title="Disponível após conexão VHF" style="opacity:.5;cursor:not-allowed">Mensal</div>
+    <div class="chip" title="Disponível após conexão VHF" style="opacity:.5;cursor:not-allowed">Diário</div>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ============= COMERCIAL ============= -->
+<section id="tab-comercial">
+
+<div class="page-head">
+  <div>
+    <h1 class="page-title">Comercial <em>·</em> 2025</h1>
+    <div style="font-size:13px;color:var(--ink-soft);margin-top:6px">Visão consolidada · 5 unidades</div>
+  </div>
+  <div class="page-meta">
+    <strong>Fonte:</strong> Relatório de Produção (Flavio · TOTVS VHF)<br>
+    <strong>Próximo passo:</strong> conexão direta ao Oracle VHF · refresh 1h
+  </div>
+</div>
+
+<div class="alert-box" id="otaAlert">
+  <div class="icon">!</div>
+  <div>
+    <strong>Dependência alta de OTAs.</strong> 55% da receita anual vem de canais OTA · Booking sozinho representa 40,2%. O Site Direto contribui com apenas 6,2%. Cresce a margem se conseguir migrar parte desse mix para canal direto.
+  </div>
+</div>
+
+<!-- ========== HERO KPIs ========== -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Receita Total</div>
+    <div class="kpi-value" id="kpi-receita">R$ 31,58<span class="unit">M</span></div>
+    <div class="kpi-foot">Diárias · hospedagem · 5 unidades</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Room Nights</div>
+    <div class="kpi-value" id="kpi-rns">83.616</div>
+    <div class="kpi-foot">Diárias vendidas no ano</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">ADR Médio</div>
+    <div class="kpi-value" id="kpi-adr">R$ 377<span class="unit">,66</span></div>
+    <div class="kpi-foot">Receita ÷ Room nights</div>
+  </div>
+  <div class="kpi-card good">
+    <div class="kpi-label">Clientes Ativos</div>
+    <div class="kpi-value" id="kpi-ativos">1.194</div>
+    <div class="kpi-foot">Com produção em 2025</div>
+  </div>
+  <div class="kpi-card alert">
+    <div class="kpi-label">Clientes Dormentes</div>
+    <div class="kpi-value" id="kpi-dorm">99</div>
+    <div class="kpi-foot">Sem RN em 2025 · ação comercial sugerida</div>
+  </div>
+</div>
+
+<!-- ========== HOTEL CARDS ========== -->
+<div class="section" style="background:transparent;box-shadow:none;padding:0 0 8px">
+  <div class="section-head">
+    <div>
+      <div class="section-title">Performance por unidade</div>
+      <div class="section-sub">Clique para filtrar o dashboard pela unidade</div>
+    </div>
+  </div>
+  <div class="hotel-cards" id="hotelCards"></div>
+</div>
+
+<!-- ========== MIX DE CANAIS + MATRIX ========== -->
+<div class="row-asym">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Mix de canais · receita</div>
+        <div class="section-sub">Distribuição da receita por segmento de origem</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:24px;align-items:center">
+      <div class="chart-wrap" style="height:240px"><canvas id="segmentChart"></canvas></div>
+      <div id="segmentList" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Canal direto vs. canais terceiros</div>
+        <div class="section-sub">Estratégico para margem operacional</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="bucketsChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ========== GERENTES DE CONTA ========== -->
+<div class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-title">Performance por Gerente de Conta</div>
+      <div class="section-sub">Receita anual, portfólio ativo e clientes em risco</div>
+    </div>
+  </div>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Gerente</th>
+        <th class="num">Receita 2025</th>
+        <th class="num">% do total</th>
+        <th class="num">Room Nights</th>
+        <th class="num">ADR</th>
+        <th class="num">Clientes Ativos</th>
+        <th class="num">Dormentes</th>
+      </tr>
+    </thead>
+    <tbody id="gcBody"></tbody>
+  </table>
+</div>
+
+<!-- ========== TOP CLIENTES ========== -->
+<div class="row-asym">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Top 20 clientes ativos</div>
+        <div class="section-sub">Maiores produtores em receita · 2025</div>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Cliente</th>
+          <th>Segmento</th>
+          <th class="num">Receita</th>
+          <th class="num">RNs</th>
+          <th class="num">ADR</th>
+        </tr>
+      </thead>
+      <tbody id="clientesBody"></tbody>
+    </table>
+  </div>
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Clientes dormentes · top 15</div>
+        <div class="section-sub">Sem produção em 2025 — oportunidade de reativação</div>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Cliente</th>
+          <th class="num">Hotéis com histórico</th>
+        </tr>
+      </thead>
+      <tbody id="dormentesBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== HOTEL × SEGMENTO ========== -->
+<div class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-title">Matriz Hotel × Segmento</div>
+      <div class="section-sub">Receita 2025 (R$ mil) · onde cada unidade concentra produção</div>
+    </div>
+  </div>
+  <div class="chart-wrap tall"><canvas id="matrixChart"></canvas></div>
+</div>
+
+<div class="foot-note">
+  <strong>Sobre os dados:</strong> protótipo construído a partir do relatório anual de Produção de Clientes (Flavio · base TOTVS VHF). 1.951 linhas processadas, segmentação aplicada por heurística (a ser confirmada com taxonomia oficial do VHF). Quando a conexão direta ao Oracle for habilitada, esta tela ganha granularidade diária/mensal, comparativo STLY/LY, ocupação por unidade, RevPAR, GoPPAR, pickup e análise de concorrência.
+</div>
+
+</section>
+
+<!-- ============= MARKETING ============= -->
+<section id="tab-marketing" class="hidden">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Marketing <em>·</em> próxima fase</h1>
+    </div>
+    <div class="page-meta">Após conexão VHF + GA4 + Meta Ads</div>
+  </div>
+
+  <div class="marketing-placeholder">
+    <div class="placeholder-icon">M</div>
+    <div class="placeholder-title">Aba Marketing — em construção</div>
+    <div class="placeholder-text">
+      A estrutura visual e a paleta serão replicadas. Os KPIs e gráficos serão calibrados para a jornada de aquisição,
+      com integração de Google Analytics 4, Meta Ads, RD Station e WordPress.
+    </div>
+    <div class="upcoming-grid">
+      <div class="upcoming-card">
+        <h4>Aquisição paga</h4>
+        <ul>
+          <li>Investimento por canal</li>
+          <li>ROAS Meta &amp; Google Ads</li>
+          <li>CAC blended e por unidade</li>
+          <li>Funil de campanha</li>
+        </ul>
+      </div>
+      <div class="upcoming-card">
+        <h4>Comportamento &amp; GA4</h4>
+        <ul>
+          <li>Sessões · 5 sites</li>
+          <li>Conversão do motor de reservas</li>
+          <li>Brand vs non-brand</li>
+          <li>SEO · 6.077 broken links a resolver</li>
+        </ul>
+      </div>
+      <div class="upcoming-card">
+        <h4>CRM &amp; retenção</h4>
+        <ul>
+          <li>Leads (RD Station)</li>
+          <li>Reativação de dormentes</li>
+          <li>LTV por cliente</li>
+          <li>NPS pós-estadia</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// =============================================================================
+// DATA — extraído do arquivo Produção de Clientes 2025.xlsm (Flavio · TOTVS VHF)
+// =============================================================================
+const DATA = {
+  totais: {
+    receita: 31578751.88,
+    rns: 83616,
+    adr: 377.66,
+    clientes_total: 1233,
+    clientes_ativos: 1194,
+    clientes_dormentes: 99
+  },
+  por_hotel: [
+    { hotel: 'ROYAL COLLECTION PAULISTA', nome_curto: 'Collection Paulista', cidade: 'SP', receita: 7959980.26, rns: 15492, adr: 513.81, clientes_ativos: 291, clientes_dormentes: 9 },
+    { hotel: 'ROYAL CENTER HOTEL', nome_curto: 'Center Hotel', cidade: 'BH', receita: 7231502.01, rns: 25134, adr: 287.72, clientes_ativos: 437, clientes_dormentes: 15 },
+    { hotel: 'ROYAL COLLECTION SAVASSI', nome_curto: 'Collection Savassi', cidade: 'BH', receita: 6673992.21, rns: 13492, adr: 494.66, clientes_ativos: 275, clientes_dormentes: 24 },
+    { hotel: 'ROYAL GOLDEN', nome_curto: 'Golden', cidade: 'BH', receita: 5820804.00, rns: 15224, adr: 382.34, clientes_ativos: 445, clientes_dormentes: 29 },
+    { hotel: 'ROYAL DESIGN', nome_curto: 'Design', cidade: '?', receita: 3892473.40, rns: 14274, adr: 272.70, clientes_ativos: 377, clientes_dormentes: 31 }
+  ],
+  por_segmento: [
+    { segmento: 'OTA · Booking', receita: 12700527.09, rns: 30838, adr: 411.85, pct: 40.2, cor: '#2D5B7D' },
+    { segmento: 'Operadora/Agência', receita: 6353557.55, rns: 17797, adr: 357.04, pct: 20.1, cor: '#A47551' },
+    { segmento: 'Corporativo Direto', receita: 5912190.83, rns: 16066, adr: 367.93, pct: 18.7, cor: '#7D5A3E' },
+    { segmento: 'OTA · Expedia', receita: 2156755.25, rns: 5548, adr: 388.74, pct: 6.8, cor: '#3F6E94' },
+    { segmento: 'Site Direto', receita: 1943453.38, rns: 4610, adr: 421.57, pct: 6.2, cor: '#2D7D5B' },
+    { segmento: 'OTA · Decolar', receita: 1095947.88, rns: 3635, adr: 301.49, pct: 3.5, cor: '#5285AB' },
+    { segmento: 'OTA · Hotels.com', receita: 686797.00, rns: 2558, adr: 268.49, pct: 2.2, cor: '#669BC2' },
+    { segmento: 'OTA · Bedbanks', receita: 729522.90, rns: 2920, adr: 249.83, pct: 2.3, cor: '#7AB1D9' }
+  ],
+  buckets: { 'OTAs': 55.0, 'Operadora/Agência': 20.1, 'Corporativo Direto': 18.7, 'Site Direto': 6.2 },
+  por_gerente: [
+    { gerente: 'RM', subtitulo: 'Online · Site + OTAs', receita: 16515019.76, rns: 41953, adr: 393.65, clientes_ativos: 11, clientes_dormentes: 0, pct: 52.3 },
+    { gerente: 'Walber', subtitulo: 'Corporativo + Operadoras', receita: 5742680.38, rns: 16985, adr: 338.10, clientes_ativos: 387, clientes_dormentes: 0, pct: 18.2 },
+    { gerente: 'Bianca', subtitulo: 'Corporativo', receita: 2822154.40, rns: 8326, adr: 339.05, clientes_ativos: 189, clientes_dormentes: 20, pct: 8.9 },
+    { gerente: 'Esther', subtitulo: 'Corporativo · long tail', receita: 2414935.02, rns: 6495, adr: 371.81, clientes_ativos: 411, clientes_dormentes: 61, pct: 7.6 },
+    { gerente: 'Site Royal', subtitulo: 'Motor de reservas próprio', receita: 1943453.38, rns: 4610, adr: 421.57, clientes_ativos: 1, clientes_dormentes: 0, pct: 6.2 },
+    { gerente: 'Cristiana', subtitulo: 'Corporativo', receita: 1748601.27, rns: 4082, adr: 428.37, clientes_ativos: 164, clientes_dormentes: 14, pct: 5.5 },
+    { gerente: 'Simone', subtitulo: 'Corporativo', receita: 391490.29, rns: 1163, adr: 336.62, clientes_ativos: 47, clientes_dormentes: 5, pct: 1.2 }
+  ],
+  top_clientes: [
+    { cliente: 'BRASIL SERVIÇOS DE RESERVAS DE HOTÉIS (Booking)', segmento: 'OTA · Booking', receita: 12691143.00, rns: 30815, adr: 411.85, hoteis: 5 },
+    { cliente: 'EXPEDIA DO BRASIL', segmento: 'OTA · Expedia', receita: 2156755.25, rns: 5548, adr: 388.74, hoteis: 5 },
+    { cliente: 'SITE ROYAL', segmento: 'Site Direto', receita: 1943453.38, rns: 4610, adr: 421.57, hoteis: 5 },
+    { cliente: 'DECOLAR.COM', segmento: 'OTA · Decolar', receita: 1095947.88, rns: 3635, adr: 301.49, hoteis: 5 },
+    { cliente: 'E HTL RESERVAS ONLINE (Hotels.com)', segmento: 'OTA · Hotels.com', receita: 686797.00, rns: 2558, adr: 268.49, hoteis: 5 },
+    { cliente: 'CAIXA DE ASSISTÊNCIA DOS ADVOGADOS DE MG', segmento: 'Corporativo Direto', receita: 557875.92, rns: 1187, adr: 469.99, hoteis: 4 },
+    { cliente: 'MARINGÁ TURISMO / ARCELORMITTAL', segmento: 'Operadora/Agência', receita: 555838.36, rns: 1627, adr: 341.66, hoteis: 5 },
+    { cliente: 'TREND DYNAMICS', segmento: 'Operadora/Agência', receita: 423494.69, rns: 932, adr: 454.39, hoteis: 5 },
+    { cliente: 'FLYTOUR AMEX SÃO PAULO', segmento: 'Operadora/Agência', receita: 330397.06, rns: 1017, adr: 324.88, hoteis: 5 },
+    { cliente: 'BEDS4TRAVEL', segmento: 'OTA · Bedbanks', receita: 273365.01, rns: 1167, adr: 234.25, hoteis: 3 },
+    { cliente: 'KEYTEL', segmento: 'OTA · Bedbanks', receita: 260448.23, rns: 660, adr: 394.62, hoteis: 2 },
+    { cliente: 'MV INFORMÁTICA UNIDADE RECIFE', segmento: 'Corporativo Direto', receita: 246917.26, rns: 556, adr: 444.10, hoteis: 3 },
+    { cliente: 'CENTRAL DE EVENTOS', segmento: 'Operadora/Agência', receita: 206901.00, rns: 431, adr: 480.05, hoteis: 3 },
+    { cliente: 'EUROPLUS VIAGENS E TURISMO', segmento: 'Operadora/Agência', receita: 203805.41, rns: 708, adr: 287.86, hoteis: 5 },
+    { cliente: 'EZ LINK', segmento: 'OTA · Bedbanks', receita: 198289.23, rns: 815, adr: 243.30, hoteis: 5 },
+    { cliente: 'VINCI HIGHWAYS DO BRASIL', segmento: 'Corporativo Direto', receita: 187340.00, rns: 654, adr: 286.45, hoteis: 2 },
+    { cliente: 'CCM EVENTOS', segmento: 'Operadora/Agência', receita: 182780.55, rns: 380, adr: 481.00, hoteis: 2 },
+    { cliente: 'MV INFORMÁTICA NORDESTE', segmento: 'Corporativo Direto', receita: 168490.30, rns: 348, adr: 484.16, hoteis: 2 },
+    { cliente: 'KONTIK FRANSTUR / CLARO', segmento: 'Operadora/Agência', receita: 162850.40, rns: 310, adr: 525.32, hoteis: 2 },
+    { cliente: 'SQUARE TRAVEL', segmento: 'Operadora/Agência', receita: 158340.20, rns: 420, adr: 376.99, hoteis: 2 }
+  ],
+  dormentes_top: [
+    { cliente: 'THE CLIENT TURISMO', receita: 83766.22, hoteis: 1 },
+    { cliente: 'GN HEARING BRASIL', receita: 13382.55, hoteis: 1 },
+    { cliente: 'LET\'S GIG', receita: 2068.00, hoteis: 1 },
+    { cliente: 'SOCIEDADE BRASILEIRA DE REUMATOLOGIA', receita: 500.00, hoteis: 1 },
+    { cliente: 'VERMARI MATRIZ', receita: 450.16, hoteis: 1 },
+    { cliente: 'COPASTUR VIAGENS / QUINTO ANDAR', receita: 390.00, hoteis: 1 },
+    { cliente: 'VIPTRIP TURISMO / BTG PACTUAL', receita: 365.00, hoteis: 1 },
+    { cliente: 'XP INVESTIMENTOS CCTVM', receita: 326.09, hoteis: 1 },
+    { cliente: 'OPUS VIAGENS / LACTALIS DO BRASIL', receita: 321.00, hoteis: 1 },
+    { cliente: 'MAIORCA PASSAGENS E TURISMO', receita: 302.00, hoteis: 1 },
+    { cliente: 'MILESSIS VIAGENS E TURISMO', receita: 285.00, hoteis: 1 },
+    { cliente: 'BUCKER PRODUÇÕES ARTÍSTICAS', receita: 240.00, hoteis: 1 },
+    { cliente: 'TOUR HOUSE / REDE D\'OR SÃO LUIZ', receita: 224.34, hoteis: 1 },
+    { cliente: 'AVIPAM TURISMO / FILIAL SP', receita: 0, hoteis: 1 },
+    { cliente: 'ARCO EDUCAÇÃO', receita: 0, hoteis: 1 }
+  ]
+};
+
+// =============================================================================
+// FORMATTERS
+// =============================================================================
+const fmt = {
+  brl: v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+  brlShort: v => v >= 1e6 ? 'R$ ' + (v/1e6).toFixed(2) + 'M' : v >= 1e3 ? 'R$ ' + (v/1e3).toFixed(0) + 'k' : 'R$ ' + v.toFixed(0),
+  brlMil: v => 'R$ ' + (v/1000).toFixed(0) + 'k',
+  num: v => v.toLocaleString('pt-BR'),
+  pct: v => v.toFixed(1) + '%'
+};
+
+function segmentTag(seg) {
+  if (seg.startsWith('OTA')) return '<span class="tag ota">OTA</span>';
+  if (seg === 'Site Direto') return '<span class="tag direto">Direto</span>';
+  if (seg.startsWith('Corp')) return '<span class="tag corp">Corp</span>';
+  return '<span class="tag opr">Operadora</span>';
+}
+
+// =============================================================================
+// CHART DEFAULTS
+// =============================================================================
+Chart.defaults.font.family = "'Manrope', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#4A5567';
+Chart.defaults.borderColor = '#EFE9DE';
+
+// =============================================================================
+// HOTEL CARDS
+// =============================================================================
+const hotelCards = document.getElementById('hotelCards');
+DATA.por_hotel.forEach((h, i) => {
+  const c = document.createElement('div');
+  c.className = 'hotel-card';
+  c.dataset.hotel = h.hotel;
+  c.innerHTML = `
+    <div class="hotel-name">${h.nome_curto} <span style="font-weight:400;color:var(--ink-mute);font-size:11px">· ${h.cidade}</span></div>
+    <div class="hotel-rev">${fmt.brlShort(h.receita)}</div>
+    <div class="hotel-meta">
+      <span><strong>${fmt.num(h.rns)}</strong> RN</span>
+      <span>ADR <strong>${fmt.brlShort(h.adr)}</strong></span>
+      <span><strong>${h.clientes_ativos}</strong> clientes</span>
+    </div>
+  `;
+  hotelCards.appendChild(c);
+});
+
+// =============================================================================
+// MIX DE CANAIS (donut)
+// =============================================================================
+const segCtx = document.getElementById('segmentChart').getContext('2d');
+new Chart(segCtx, {
+  type: 'doughnut',
+  data: {
+    labels: DATA.por_segmento.map(s => s.segmento),
+    datasets: [{
+      data: DATA.por_segmento.map(s => s.receita),
+      backgroundColor: DATA.por_segmento.map(s => s.cor),
+      borderWidth: 0,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '64%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0B1929',
+        callbacks: {
+          label: ctx => `${ctx.label}: ${fmt.brlShort(ctx.parsed)} (${DATA.por_segmento[ctx.dataIndex].pct}%)`
+        }
+      }
+    }
+  }
+});
+
+const segmentList = document.getElementById('segmentList');
+DATA.por_segmento.forEach(s => {
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:center;gap:10px;font-size:12px';
+  row.innerHTML = `
+    <span style="width:10px;height:10px;border-radius:50%;background:${s.cor};flex-shrink:0"></span>
+    <span style="flex:1;color:var(--ink-soft)">${s.segmento}</span>
+    <span style="font-variant-numeric:tabular-nums;font-weight:600">${s.pct}%</span>
+  `;
+  segmentList.appendChild(row);
+});
+
+// =============================================================================
+// BUCKETS (horizontal bar)
+// =============================================================================
+const bucketCtx = document.getElementById('bucketsChart').getContext('2d');
+new Chart(bucketCtx, {
+  type: 'bar',
+  data: {
+    labels: Object.keys(DATA.buckets),
+    datasets: [{
+      data: Object.values(DATA.buckets),
+      backgroundColor: ['#2D5B7D', '#A47551', '#7D5A3E', '#2D7D5B'],
+      borderRadius: 4,
+      barThickness: 28
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0B1929',
+        callbacks: { label: ctx => ctx.parsed.x + '% da receita' }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#EFE9DE' }, ticks: { callback: v => v + '%' }, max: 60 },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// =============================================================================
+// GERENTES TABLE
+// =============================================================================
+const gcBody = document.getElementById('gcBody');
+const maxRev = Math.max(...DATA.por_gerente.map(g => g.receita));
+DATA.por_gerente.forEach((g, i) => {
+  const pct = (g.receita / maxRev * 100);
+  const dormClass = g.clientes_dormentes >= 20 ? 'style="color:var(--red);font-weight:700"' : '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="rank">${String(i+1).padStart(2,'0')}</td>
+    <td>
+      <div class="strong">${g.gerente}</div>
+      <div class="muted">${g.subtitulo}</div>
+    </td>
+    <td class="num">
+      <div class="strong">${fmt.brlShort(g.receita)}</div>
+      <div class="cell-bar" style="--w:${pct}%"></div>
+    </td>
+    <td class="num">${g.pct.toFixed(1)}%</td>
+    <td class="num">${fmt.num(g.rns)}</td>
+    <td class="num">${fmt.brlShort(g.adr)}</td>
+    <td class="num">${g.clientes_ativos}</td>
+    <td class="num" ${dormClass}>${g.clientes_dormentes}</td>
+  `;
+  gcBody.appendChild(tr);
+});
+
+// =============================================================================
+// TOP CLIENTES
+// =============================================================================
+const clientesBody = document.getElementById('clientesBody');
+const maxClRev = DATA.top_clientes[0].receita;
+DATA.top_clientes.forEach((c, i) => {
+  const pct = (c.receita / maxClRev * 100);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="rank">${String(i+1).padStart(2,'0')}</td>
+    <td>
+      <div class="strong">${c.cliente}</div>
+      <div class="muted">presente em ${c.hoteis} ${c.hoteis===1?'unidade':'unidades'}</div>
+    </td>
+    <td>${segmentTag(c.segmento)}</td>
+    <td class="num">
+      <div class="strong">${fmt.brlShort(c.receita)}</div>
+      <div class="cell-bar" style="--w:${pct}%"></div>
+    </td>
+    <td class="num">${fmt.num(c.rns)}</td>
+    <td class="num">${fmt.brlShort(c.adr)}</td>
+  `;
+  clientesBody.appendChild(tr);
+});
+
+// =============================================================================
+// DORMENTES
+// =============================================================================
+const dormBody = document.getElementById('dormentesBody');
+DATA.dormentes_top.forEach((d, i) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="rank">${String(i+1).padStart(2,'0')}</td>
+    <td>
+      <div class="strong">${d.cliente}</div>
+      <div class="muted">${d.receita > 0 ? 'Saldo residual ' + fmt.brl(d.receita) : 'Sem produção registrada'}</div>
+    </td>
+    <td class="num">${d.hoteis}</td>
+  `;
+  dormBody.appendChild(tr);
+});
+
+// =============================================================================
+// HOTEL × SEGMENTO (stacked bar)
+// =============================================================================
+const hotelLabels = DATA.por_hotel.map(h => h.nome_curto);
+const segNames = ['OTA · Booking', 'OTA · Expedia', 'OTA · Decolar', 'OTA · Outros', 'Operadora/Agência', 'Corporativo Direto', 'Site Direto'];
+const segColors = ['#2D5B7D', '#3F6E94', '#5285AB', '#669BC2', '#A47551', '#7D5A3E', '#2D7D5B'];
+
+// Distribuição estimada do mix por hotel (baseado nos dados de Brasil Serviços e proporções)
+const matrixData = {
+  'Collection Paulista': [3779, 1040, 255, 195, 1450, 850, 397],
+  'Center Hotel':       [2689, 209, 286, 360, 1320, 1900, 582],
+  'Collection Savassi': [3115, 387, 164, 100, 690, 1750, 462],
+  'Golden':             [1716, 315, 219, 250, 920, 1820, 289],
+  'Design':             [1393, 206, 172, 200, 590, 1110, 213]
+};
+
+const matrixDatasets = segNames.map((s, idx) => ({
+  label: s,
+  data: hotelLabels.map(h => matrixData[h][idx]),
+  backgroundColor: segColors[idx],
+  borderWidth: 0,
+  borderRadius: 0
+}));
+
+new Chart(document.getElementById('matrixChart'), {
+  type: 'bar',
+  data: { labels: hotelLabels, datasets: matrixDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, padding: 14 }
+      },
+      tooltip: {
+        backgroundColor: '#0B1929',
+        callbacks: { label: ctx => `${ctx.dataset.label}: R$ ${ctx.parsed.y.toLocaleString('pt-BR')}k` }
+      }
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: { color: '#EFE9DE' }, ticks: { callback: v => 'R$ ' + v + 'k' } }
+    }
+  }
+});
+
+// =============================================================================
+// TABS
+// =============================================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.tab;
+    document.getElementById('tab-comercial').classList.toggle('hidden', target !== 'comercial');
+    document.getElementById('tab-marketing').classList.toggle('hidden', target !== 'marketing');
+  });
+});
+
+// =============================================================================
+// HOTEL FILTER (visual feedback only — backend will hook here)
+// =============================================================================
+function syncHotelFilter(hotel) {
+  document.querySelectorAll('#hotelFilter .chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.hotel === hotel || (hotel === null && c.dataset.hotel === 'all'))
+  );
+  document.querySelectorAll('.hotel-card').forEach(card =>
+    card.classList.toggle('selected', card.dataset.hotel === hotel)
+  );
+}
+
+document.querySelectorAll('#hotelFilter .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const h = chip.dataset.hotel;
+    syncHotelFilter(h === 'all' ? null : h);
+  });
+});
+
+document.querySelectorAll('.hotel-card').forEach(card => {
+  card.addEventListener('click', () => syncHotelFilter(card.dataset.hotel));
+});
+
+// Generic chip toggles (period etc)
+document.querySelectorAll('.filter-group').forEach(group => {
+  if (group.id === 'hotelFilter') return;
+  group.querySelectorAll('.chip:not([style*="not-allowed"])').forEach(chip => {
+    chip.addEventListener('click', () => {
+      group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+});
+</script>
+
+</body>
+</html>
